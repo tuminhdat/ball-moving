@@ -12,8 +12,13 @@ const numBalls = 40;
 const expandRadius = 50;
 
 gameBoard.addEventListener("mousemove", (event) => {
-    mouseOverX = event.offsetX ;
+    mouseOverX = event.offsetX;
     mouseOverY = event.offsetY;
+});
+
+gameBoard.addEventListener("mouseleave", (event) => {
+    mouseOverX = null;
+    mouseOverY = null;
 });
 
 startProgram();
