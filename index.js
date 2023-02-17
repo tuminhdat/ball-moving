@@ -4,9 +4,17 @@ const gameWith = gameBoard.width;
 const gameHeight = gameBoard.height;
 let intervalID;
 let ballSpeed = 1;
-const numBalls = 20;
 const boardBackground = "white";
 const balls = [];
+let mouseOverX = 0;
+let mouseOverY = 0;
+const numBalls = 40;
+const expandRadius = 50;
+
+gameBoard.addEventListener("mousemove", (event) => {
+    mouseOverX = event.offsetX ;
+    mouseOverY = event.offsetY;
+});
 
 startProgram();
 
@@ -18,6 +26,7 @@ function startProgram(){
 function nextTick(){
     intervalID = setTimeout(() => {
         clearBoard();
+        animatedBall();
         moveBall();
         drawBall();
         checkCollision();
@@ -63,7 +72,8 @@ function generateBalls(){
                             ballYDirection: directionY,
                             ballColor: "#" + randomColor,
                             ballRadius: randRadius,
-                            ballSpeed: speed
+                            ballSpeed: speed,
+                            ballStartRadius: randRadius
                         }
         balls.push(newBall);
         drawBall();
@@ -103,6 +113,24 @@ function checkCollision(){
     
         if (ball.ballX >= gameWith - ball.ballRadius) {
             ball.ballXDirection *= -1;
+        }
+    }
+}
+
+function animatedBall(){
+    for(const ball of balls){
+        // when hover the mouse to ball, expand the ball
+        // when move the mouse out, the ball should get back to original
+        if (mouseOverX > ball.ballX - ball.ballRadius &&
+            mouseOverX < ball.ballX + ball.ballRadius &&
+            mouseOverY > ball.ballY - ball.ballRadius &&
+            mouseOverY < ball.ballY + ball.ballRadius &&
+            ball.ballRadius < expandRadius) {
+                ball.ballRadius += 5;
+        } else {
+            if (ball.ballRadius > ball.ballStartRadius){
+                ball.ballRadius -= 5;
+            }
         }
     }
 }
